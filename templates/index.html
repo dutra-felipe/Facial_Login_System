@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../static/css/style.css">
+  <link rel="stylesheet" href="../static/css/media.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" 
+          integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
+          crossorigin="anonymous"></script>
+  <title>Login Biométrico</title>
+</head>
+<body>
+  <div id="container">
+    <div class="banner">
+      <img src="../static/images/login.png" alt="imagem-login">
+      <p style="color: #fff;">
+        Seja bem-vindo, acesse e aproveite todo o conteúdo. <br>
+        Somos uma equipe de profissionais empenhados em <br>
+        trazer o melhor conteúdo direcionado a você, usuário.
+      </p>
+    </div>
+
+    <div class="box-login">
+      <h1>Seja bem-vindo!</h1>
+      <h2>Faça seu login agora:</h2>
+      
+      <div class="box">  
+        <input type="text" name="username" id="username" placeholder="Nome" required>
+        <input type="password" name="password" id="password" placeholder="Senha" required>
+
+        <button id="biometria" onclick="openCameraWindow()">Ativar Biometria</button>
+        <button id="login">Login</button>
+    
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    function openCameraWindow() {
+      const cameraWindow = window.open("", "Camera", "width=400,height=400");
+      cameraWindow.document.write(`
+        <h3>Capture sua foto</h3>
+        <video id="video" width="300" height="200" autoplay></video>
+        <button onclick="capturePhoto()">Capturar Foto</button>
+        <script>
+          const video = document.getElementById('video');
+          navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => { video.srcObject = stream; })
+            .catch(error => console.error("Erro ao acessar a câmera:", error));
+  
+          function capturePhoto() {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = canvas.toDataURL('image/png');
+            window.opener.localStorage.setItem('capturedImage', imageData);
+            alert("Foto capturada com sucesso!");
+            window.close();
+          }
+        <\/script>
+      `);
+    }
+  
+    // Envia a imagem capturada e o CPF para o backend
+    document.getElementById('login').addEventListener('click', () => {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const capturedImage = localStorage.getItem('capturedImage');
+  
+      if (!capturedImage) {
+        alert("Por favor, capture uma foto antes de continuar.");
+        return;
+      }
+  
+      $.ajax({
+        url: '/',
+        method: 'POST',
+        data: JSON.stringify({ username, password, photo: capturedImage }),
+        contentType: 'application/json',
+        success: function(response) {
+          if (response.redirect) {
+            window.location.href = response.redirect;
+          } else {
+            alert(response.message || "Login bem-sucedido!");
+          }
+          localStorage.removeItem('capturedImage');
+        },
+        error: function(error) {
+          console.error("Erro ao realizar login:", error);
+          alert("Erro ao realizar login.");
+        }
+      });
+    });
+  </script>
+</body>
+</html>

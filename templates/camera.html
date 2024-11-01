@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Câmera</title>
+</head>
+<body>
+  <h1>Capture sua foto</h1>
+  <video id="video" width="400" height="300" autoplay></video>
+  <button id="capture">Tirar Foto</button>
+  <canvas id="canvas" width="400" height="300" style="display: none;"></canvas>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureButton = document.getElementById('capture');
+    const context = canvas.getContext('2d');
+
+    // Acessa a câmera
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(error => {
+        console.error("Erro ao acessar a câmera: ", error);
+        alert("Não foi possível acessar a câmera.");
+      });
+
+    // Captura a foto e fecha a janela
+    captureButton.addEventListener('click', () => {
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const imageData = canvas.toDataURL('image/png');  // Converte a imagem para base64
+
+      // Armazena a imagem no localStorage
+      localStorage.setItem('capturedImage', imageData);
+
+      // Para o stream da câmera e fecha a janela
+      const stream = video.srcObject;
+      const tracks = stream.getTracks();
+
+      tracks.forEach(track => track.stop());  // Para a câmera
+      window.close();  // Fecha a janela
+    });
+  </script>
+</body>
+</html>

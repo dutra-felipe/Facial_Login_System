@@ -55,6 +55,7 @@ Um sistema de login com autenticação facial desenvolvido em Flask e MinIO. Est
    - Use as chaves de acesso e segredo padrão configuradas no `config.py`.
 
    ```bash
+
     # No docker-compose.yml, colocar um usuário e senha
 
     MINIO_ROOT_USER: #colocar um usuário (Ex: user)
@@ -65,6 +66,7 @@ Um sistema de login com autenticação facial desenvolvido em Flask e MinIO. Est
    - No `config.py`, defina usuários com seus dados.
 
    ```bash
+
    # Config.py:
 
    access_key= # "usuario minio definido no docker-compose",
@@ -74,6 +76,7 @@ Um sistema de login com autenticação facial desenvolvido em Flask e MinIO. Est
     - Defina o usuário em config.py e adicione a imagem na pasta images com o nome do próprio.
 
     ```bash
+    
     # Exemplo:
 
     {

@@ -53,6 +53,7 @@ Um sistema de login com autenticação facial desenvolvido em Flask e MinIO. Est
 4. **Configure o MinIO:**
    - Certifique-se de que o MinIO está rodando em `localhost:9000` (ou atualize a URL em `config.py` se for diferente).
    - Use as chaves de acesso e segredo padrão configuradas no `config.py`.
+
    ```
     # No docker-compose.yml, colocar um usuário e senha
 
@@ -62,6 +63,7 @@ Um sistema de login com autenticação facial desenvolvido em Flask e MinIO. Est
 
 5. **Configure os dados de usuário:**
    - No `config.py`, defina usuários com seus dados.
+
    ```
    # Config.py:
 
@@ -70,6 +72,7 @@ Um sistema de login com autenticação facial desenvolvido em Flask e MinIO. Est
    ```
 6. **Adicione as imagens em static/images/ :**
     - Defina o usuário em config.py e adicione a imagem na pasta images com o nome do próprio.
+    
     ```
     # Exemplo:
 
